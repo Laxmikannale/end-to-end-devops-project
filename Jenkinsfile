@@ -2,42 +2,17 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Checkout') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Checking out the project code...'
+                sh 'sudo docker build -t laxmi-devops-website .'
             }
         }
 
-        stage('Build') {
+        stage('Deploy Docker Container') {
             steps {
-                echo 'Build started...'
-                echo 'Build successful!'
+                sh 'sudo docker rm -f website-container || true'
+                sh 'sudo docker run -d -p 80:80 --name website-container laxmi-devops-website'
             }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Testing application...'
-                echo 'Tests completed successfully!'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deployment stage...'
-                echo 'Deployment successful!'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'CI/CD Pipeline completed successfully!'
-        }
-
-        failure {
-            echo 'Pipeline failed. Check the console output.'
         }
     }
 }
