@@ -1,17 +1,21 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+    }
+
     stages {
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t laxmi-devops-website .'
+                sh 'docker build -t laxmikannale/laxmi-devops-website:latest .'
             }
         }
 
-        stage('Deploy Docker Container') {
+        stage('Push to Docker Hub') {
             steps {
-                sh 'docker rm -f website-container || true'
-                sh 'docker run -d -p 80:80 --name website-container laxmi-devops-website'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push laxmikannale/laxmi-devops-website:latest'
             }
         }
     }
