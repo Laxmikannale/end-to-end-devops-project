@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laxmi-devops-website
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: laxmi-devops-website
+  template:
+    metadata:
+      labels:
+        app: laxmi-devops-website
+    spec:
+      containers:
+      - name: website
+        image: laxmikannale/laxmi-devops-website:latest
+        ports:
+        - containerPort: 80
