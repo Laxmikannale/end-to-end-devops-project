@@ -32,5 +32,13 @@ pipeline {
                 sh 'ansible-playbook -i /var/lib/jenkins/ansible/inventory.ini ansible/deploy.yml'
             }
         }
+
+        stage('Kubernetes Deployment') {
+            steps {
+                sh 'kubectl apply -f k8s/deployment.yaml'
+                sh 'kubectl apply -f k8s/service.yaml'
+                sh 'kubectl rollout status deployment/laxmi-devops-website'
+            }
+        }
     }
 }
