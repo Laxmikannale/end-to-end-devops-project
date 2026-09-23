@@ -1,0 +1,27 @@
+---
+- name: Deploy Docker Website
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Docker image
+      shell: docker pull laxmikannale/laxmi-devops-website:latest
+
+    - name: Remove old website container
+      shell: docker rm -f website-container || true
+
+    - name: Run website container
+      shell: docker run -d -p 80:80 --name website-container laxmikannale/laxmi-devops-website:latest
